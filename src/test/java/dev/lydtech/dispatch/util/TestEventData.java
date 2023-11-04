@@ -1,5 +1,6 @@
 package dev.lydtech.dispatch.util;
 
+import dev.lydtech.dispatch.message.DispatchPreparing;
 import dev.lydtech.dispatch.message.OrderCreated;
 import dev.lydtech.dispatch.message.OrderDispached;
 
@@ -18,6 +19,13 @@ public class TestEventData {
     public static OrderDispached buildOrderDispatchedEvent(UUID orderId) {
 
         return OrderDispached.builder()
+                .orderId(orderId)
+                .build();
+    }
+
+    public static DispatchPreparing buildDispatchPreparingEvent(UUID orderId) {
+
+        return DispatchPreparing.builder()
                 .orderId(orderId)
                 .build();
     }
