@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.UUID.randomUUID;
@@ -33,11 +34,17 @@ class DispatchServiceTest {
     @SneakyThrows
     void process_Sucess() {
         when(kafkaProducerMock.send(anyString(), any(OrderDispached.class))).thenReturn(mock(CompletableFuture.class));
+        when(kafkaProducerMock.send(anyString(), any(OrderCreated.class))).thenReturn(mock(CompletableFuture.class));
 
-        OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(randomUUID(), randomUUID().toString());
+        UUID id = randomUUID();
+
+        OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(id, id.toString());
+        OrderDispached dispachedEvent = TestEventData.buildOrderDispatchedEvent(id);
+
         service.process(testEvent);
 
-        verify(kafkaProducerMock, times(1)).send(eq("order.dispatched"), any(OrderDispached.class));
+        verify(kafkaProducerMock, times(1)).send(eq("order.dispatched"), eq(dispachedEvent));
+        verify(kafkaProducerMock, times(1)).send(eq("dispatch.tracking"), eq(testEvent));
     }
 
     @Test
