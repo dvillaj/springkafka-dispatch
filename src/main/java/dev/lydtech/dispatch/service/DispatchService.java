@@ -25,12 +25,12 @@ public class DispatchService {
 
     private final KafkaTemplate<String, Object> kafkaProducer;
 
-    public void process(OrderCreated orderCreated) throws Exception {
+    public void process(String key, OrderCreated orderCreated) throws Exception {
         DispatchPreparing dispatchPreparing = DispatchPreparing.builder()
                 .orderId(orderCreated.getOrderId())
                 .build();
 
-        kafkaProducer.send(DISPATCH_TRACKING_TOPIC, dispatchPreparing).get();
+        kafkaProducer.send(DISPATCH_TRACKING_TOPIC, key, dispatchPreparing).get();
 
         OrderDispached orderDispached = OrderDispached.builder()
                 .orderId(orderCreated.getOrderId())
@@ -38,9 +38,9 @@ public class DispatchService {
                 .notes("Dispatch: " + orderCreated.getItem())
                 .build();
 
-        kafkaProducer.send(ORDER_DISPATCHED_TOPIC, orderDispached).get();
+        kafkaProducer.send(ORDER_DISPATCHED_TOPIC, key, orderDispached).get();
 
-        log.info("Sent message: OrderId: {}, processedById: {}", orderCreated.getOrderId(), APPLICATION_ID);
+        log.info("Sent message: key: {} - OrderId: {} -  processedById: {}", key, orderCreated.getOrderId(), APPLICATION_ID);
 
     }
 }

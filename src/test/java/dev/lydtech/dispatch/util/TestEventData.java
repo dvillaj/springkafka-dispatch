@@ -15,19 +15,4 @@ public class TestEventData {
                 .item(item)
                 .build();
     }
-
-    public static OrderDispached buildOrderDispatchedEvent(UUID orderId) {
-
-        return OrderDispached.builder()
-                .orderId(orderId)
-                .build();
-    }
-
-    public static DispatchPreparing buildDispatchPreparingEvent(UUID orderId) {
-
-        return DispatchPreparing.builder()
-                .orderId(orderId)
-                .build();
-    }
-
 }
