@@ -14,4 +14,8 @@ import java.util.UUID;
 public class OrderDispached {
 
     UUID orderId;
+
+    UUID processedById;
+
+    String notes;
 }

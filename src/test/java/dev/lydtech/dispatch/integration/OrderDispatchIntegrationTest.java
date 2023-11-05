@@ -92,6 +92,7 @@ public class OrderDispatchIntegrationTest {
         registry.getListenerContainers().stream().forEach(container ->
                 ContainerTestUtils.waitForAssignment(container, embeddedKafkaBroker.getPartitionsPerTopic()));
     }
+
     @Test
     @SneakyThrows
     public void testOrderDispatchedFlow() {

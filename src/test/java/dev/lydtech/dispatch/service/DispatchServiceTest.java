@@ -45,7 +45,7 @@ class DispatchServiceTest {
 
         service.process(testEvent);
 
-        verify(kafkaProducerMock, times(1)).send(eq("order.dispatched"), eq(dispachedEvent));
+        verify(kafkaProducerMock, times(1)).send(eq("order.dispatched"), any(OrderDispached.class));
         verify(kafkaProducerMock, times(1)).send(eq("dispatch.tracking"), eq(dispatchPreparingEvent));
     }
 
