@@ -51,13 +51,29 @@ class DispatchServiceTest {
 
     @Test
     @SneakyThrows
-    void process_ProducerThrowsException() {
+    void testProcess_DispatchTrackingProducerThrowsException() {
         OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(randomUUID(), randomUUID().toString());
-        doThrow(new RuntimeException("Producer failure")).when(kafkaProducerMock).send(eq("order.dispatched"), any(OrderDispached.class));
+        doThrow(new RuntimeException("dispatch tracking producer failure")).when(kafkaProducerMock).send(eq("dispatch.tracking"), any(DispatchPreparing.class));
+
+        Exception exception = assertThrows(RuntimeException.class, ()-> service.process(testEvent));
+
+        verify(kafkaProducerMock, times(1)).send(eq("dispatch.tracking"), any(DispatchPreparing.class));
+        verifyNoMoreInteractions(kafkaProducerMock);
+        assertThat(exception.getMessage()).isEqualTo("dispatch tracking producer failure");
+    }
+
+
+    @Test
+    @SneakyThrows
+    void testProcess_OrderDispatchedProducerThrowsException() {
+        OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(randomUUID(), randomUUID().toString());
+        when(kafkaProducerMock.send(anyString(), any(DispatchPreparing.class))).thenReturn(mock(CompletableFuture.class));
+        doThrow(new RuntimeException("order dispatched producer failure")).when(kafkaProducerMock).send(eq("order.dispatched"), any(OrderDispached.class));
 
         Exception exception = assertThrows(RuntimeException.class, ()-> service.process(testEvent));
 
         verify(kafkaProducerMock, times(1)).send(eq("order.dispatched"), any(OrderDispached.class));
-        assertThat(exception.getMessage()).isEqualTo("Producer failure");
+        verify(kafkaProducerMock, times(1)).send(eq("dispatch.tracking"), any(DispatchPreparing.class));
+        assertThat(exception.getMessage()).isEqualTo("order dispatched producer failure");
     }
 }
