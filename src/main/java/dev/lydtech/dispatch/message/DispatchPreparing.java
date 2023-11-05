@@ -11,11 +11,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDispached {
+public class DispatchPreparing {
 
     UUID orderId;
-
-    UUID processedById;
-
-    String notes;
 }
