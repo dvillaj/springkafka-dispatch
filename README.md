@@ -54,6 +54,10 @@ bin/kafka-console-producer.sh --topic order.created --bootstrap-server localhost
 - 123:{"orderId": "5f33d22e-586d-4bcf-b8c9-02e9d0aea300", "item": "item-1"}
 - 389:{"orderId": "e0fa7290-92d9-4fda-a00a-b35c5fdb5867", "item": "item-2"}
 - 411:{"orderId": "cb7c7bee-a7fe-463a-9402-64c176aa61b1", "item": "item-3"}
+- 
+- 200:{"orderId": "cb7c7bee-a7fe-463a-9402-64c176aa61b1", "item": "item_200"}
+- 400:{"orderId": "cb7c7bee-a7fe-463a-9402-64c176aa61b1", "item": "item_400"}
+- 502:{"orderId": "cb7c7bee-a7fe-463a-9402-64c176aa61b1", "item": "item_502"}
 
 
 ## Consume with Key
@@ -81,4 +85,13 @@ bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
 
 bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group dispatch.order.created.consumer
 
+```
+
+## Wiremock
+
+```bash
+git clone https://github.com/lydtechconsulting/introduction-to-kafka-wiremock.git
+cd introduction-to-kafka-wiremock/
+curl https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.3.1/wiremock-standalone-3.3.1.jar --output wiremock-standalone-3.3.1.jar
+java -jar wiremock-standalone-3.3.1.jar --port 9001
 ```
